@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/tasks")
 public class TaskController {
 
     static List<Task> tasks = new ArrayList<>();
@@ -17,12 +18,12 @@ public class TaskController {
     }
 
     // get all tasks
-    @GetMapping("/tasks")
+    @GetMapping("/")
     private List<Task> getAlltasks() {
         return tasks;
     }
     // get task by id
-    @GetMapping("/tasks/{id}")
+    @GetMapping("/{id}")
     public Task getTaskById(@PathVariable int id){
         for (Task task: tasks) {
             if (task.getId() == id){
@@ -33,8 +34,31 @@ public class TaskController {
     }
 
     // creating a task
-    @PostMapping("/tasks")
+    @PostMapping("/")
     public void creteTask(@RequestBody Task newTask){
         tasks.add(newTask);
+    }
+
+    @PutMapping("/{id}")
+    public Task updateTask(@PathVariable int id, @RequestBody Task taskToBeUpdated){
+        for (Task task: tasks ) {
+            if (task.getId() == id){
+                task.setName(taskToBeUpdated.getName());
+                task.setCompleted(taskToBeUpdated.isCompleted());
+                return taskToBeUpdated;
+            }
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public Task deleteTask(@PathVariable int id){
+        for (Task task: tasks  ) {
+            if (task.getId() == id){
+                tasks.remove(task);
+                return task;
+            }
+        }
+        return null;
     }
 }
